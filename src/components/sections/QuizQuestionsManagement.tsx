@@ -23,7 +23,7 @@ export function QuizQuestionsManagement() {
   const [quizzes, setQuizzes] = useState<(Quiz & { quiz_themes: QuizTheme })[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedQuiz, setSelectedQuiz] = useState<string>('');
+  const [selectedQuiz, setSelectedQuiz] = useState<string>('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState<QuizQuestionWithDetails | null>(null);
   const [formData, setFormData] = useState({
@@ -194,7 +194,7 @@ export function QuizQuestionsManagement() {
       question.quizzes.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       question.quizzes.quiz_themes.name.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesQuiz = selectedQuiz === '' || question.quiz_id === selectedQuiz;
+    const matchesQuiz = selectedQuiz === 'all' || question.quiz_id === selectedQuiz;
     
     return matchesSearch && matchesQuiz;
   });
@@ -242,7 +242,7 @@ export function QuizQuestionsManagement() {
                 <SelectValue placeholder="Filter by quiz" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Quizzes</SelectItem>
+                <SelectItem value="all">All Quizzes</SelectItem>
                 {quizzes.map((quiz) => (
                   <SelectItem key={quiz.id} value={quiz.id}>
                     {quiz.title}
