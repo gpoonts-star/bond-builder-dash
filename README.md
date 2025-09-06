@@ -1,73 +1,114 @@
-# Welcome to your Lovable project
+# Couples App Admin Dashboard
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/d0806f38-8d1c-4512-97d5-f4304664da40
+A comprehensive admin dashboard for managing a couples mobile app, built with React, TypeScript, Tailwind CSS, and Supabase.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+### 🔐 Authentication
+- Secure admin login with Supabase Auth
+- Protected routes and session management
 
-**Use Lovable**
+### 📊 Dashboard Analytics
+- User count and engagement metrics
+- Quiz completion statistics
+- Visual charts and analytics
+- Real-time data overview
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d0806f38-8d1c-4512-97d5-f4304664da40) and start prompting.
+### 👥 User Management
+- View all registered users
+- Edit user profiles (name, gender, country)
+- Delete users
+- Search and filter functionality
+- User status tracking (complete/incomplete profiles)
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🧠 Quiz Management
+- **Quiz Themes**: Create and manage quiz categories
+- **Quizzes**: Create quizzes linked to themes
+- **Quiz Questions**: Add questions to quizzes with ordering
+- Full CRUD operations for all quiz components
 
-**Use your preferred IDE**
+### ❓ Questions Management
+- Create pre-defined questions for daily use
+- Set default scheduling times
+- Manage question library
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 📅 Daily Questions Management
+- Schedule questions for specific dates
+- Assign questions to specific couples or all couples
+- Track scheduled vs. completed questions
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Technology Stack
 
-Follow these steps:
+- **Frontend**: React 18, TypeScript, Vite
+- **UI Framework**: shadcn/ui components
+- **Styling**: Tailwind CSS with custom design system
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Charts**: Recharts
+- **State Management**: React Query (TanStack Query)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+## Database Schema
+
+The dashboard manages the following database entities:
+- Users (profiles)
+- Couples
+- Questions & Daily Questions
+- Quiz Themes, Quizzes, Quiz Questions, Quiz Answers
+- And more as defined in the provided schema
+
+## Design System
+
+- Clean, minimal interface with purple accent colors
+- Responsive design for all screen sizes
+- Consistent component styling using design tokens
+- Dark/light mode support built-in
+
+## Getting Started
+
+### Prerequisites
+- Node.js & npm
+- Supabase account and project
+
+### Installation
+
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Configuration
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The dashboard is pre-configured with Supabase credentials. The admin authentication uses Supabase Auth - create an admin user in your Supabase project to access the dashboard.
 
-**Use GitHub Codespaces**
+## Usage
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. **Login**: Use your Supabase admin credentials
+2. **Dashboard**: View overview metrics and analytics
+3. **Users**: Manage user profiles and data
+4. **Quiz Management**: Create themes, quizzes, and questions
+5. **Daily Questions**: Schedule questions for couples
 
-## What technologies are used for this project?
+## Features Highlights
 
-This project is built with:
+- ✅ Complete CRUD operations for all entities
+- ✅ Real-time data updates
+- ✅ Search and filtering
+- ✅ Responsive design
+- ✅ Clean, professional UI
+- ✅ Comprehensive analytics
+- ✅ Secure authentication
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/d0806f38-8d1c-4512-97d5-f4304664da40) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Deploy using the Lovable platform by clicking the Publish button, or deploy to any hosting service that supports static sites.
