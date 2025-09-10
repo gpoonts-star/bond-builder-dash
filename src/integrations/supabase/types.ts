@@ -92,6 +92,13 @@ export type Database = {
             foreignKeyName: "calendar_events_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "calendar_events_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -136,6 +143,13 @@ export type Database = {
             foreignKeyName: "calendar_souvenirs_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "calendar_souvenirs_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -150,6 +164,7 @@ export type Database = {
           id: string
           priority: string
           status: string
+          time: string | null
           title: string
         }
         Insert: {
@@ -160,6 +175,7 @@ export type Database = {
           id?: string
           priority: string
           status?: string
+          time?: string | null
           title: string
         }
         Update: {
@@ -170,9 +186,17 @@ export type Database = {
           id?: string
           priority?: string
           status?: string
+          time?: string | null
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "calendar_todos_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
           {
             foreignKeyName: "calendar_todos_couple_id_fkey"
             columns: ["couple_id"]
@@ -221,6 +245,57 @@ export type Database = {
           },
         ]
       }
+      chat_notifications: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_delivered: boolean | null
+          is_read: boolean | null
+          message_id: string
+          message_preview: string | null
+          question_content: string | null
+          question_id: string
+          receiver_id: string
+          sender_id: string
+          sender_name: string | null
+          thread_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_delivered?: boolean | null
+          is_read?: boolean | null
+          message_id: string
+          message_preview?: string | null
+          question_content?: string | null
+          question_id: string
+          receiver_id: string
+          sender_id: string
+          sender_name?: string | null
+          thread_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_delivered?: boolean | null
+          is_read?: boolean | null
+          message_id?: string
+          message_preview?: string | null
+          question_content?: string | null
+          question_id?: string
+          receiver_id?: string
+          sender_id?: string
+          sender_name?: string | null
+          thread_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       chat_threads: {
         Row: {
           couple_id: string | null
@@ -245,6 +320,13 @@ export type Database = {
             foreignKeyName: "chat_threads_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "chat_threads_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -257,22 +339,55 @@ export type Database = {
           },
         ]
       }
+      chat_viewers: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_viewing: boolean | null
+          last_seen: string | null
+          thread_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_viewing?: boolean | null
+          last_seen?: string | null
+          thread_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_viewing?: boolean | null
+          last_seen?: string | null
+          thread_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       couples: {
         Row: {
           created_at: string | null
           id: string
+          status: string | null
           user1_id: string
           user2_id: string | null
         }
         Insert: {
           created_at?: string | null
           id?: string
+          status?: string | null
           user1_id: string
           user2_id?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string
+          status?: string | null
           user1_id?: string
           user2_id?: string | null
         }
@@ -289,6 +404,74 @@ export type Database = {
             columns: ["user2_id"]
             isOneToOne: true
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_question_notifications: {
+        Row: {
+          couple_id: string | null
+          created_at: string | null
+          daily_question_id: string
+          id: string
+          is_deleted: boolean | null
+          is_read: boolean | null
+          question_content: string
+          question_id: string
+          scheduled_for: string
+          updated_at: string | null
+        }
+        Insert: {
+          couple_id?: string | null
+          created_at?: string | null
+          daily_question_id: string
+          id?: string
+          is_deleted?: boolean | null
+          is_read?: boolean | null
+          question_content: string
+          question_id: string
+          scheduled_for: string
+          updated_at?: string | null
+        }
+        Update: {
+          couple_id?: string | null
+          created_at?: string | null
+          daily_question_id?: string
+          id?: string
+          is_deleted?: boolean | null
+          is_read?: boolean | null
+          question_content?: string
+          question_id?: string
+          scheduled_for?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_question_notifications_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "daily_question_notifications_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couples"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_question_notifications_daily_question_id_fkey"
+            columns: ["daily_question_id"]
+            isOneToOne: false
+            referencedRelation: "daily_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_question_notifications_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
             referencedColumns: ["id"]
           },
         ]
@@ -320,6 +503,13 @@ export type Database = {
             foreignKeyName: "daily_questions_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "daily_questions_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -328,6 +518,111 @@ export type Database = {
             columns: ["question_id"]
             isOneToOne: false
             referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_stats: {
+        Row: {
+          chess_checkmate: boolean | null
+          chess_pieces_captured_player1: number | null
+          chess_pieces_captured_player2: number | null
+          chess_stalemate: boolean | null
+          connect4_moves: number | null
+          connect4_winning_move: number | null
+          couple_id: string
+          created_at: string | null
+          game_duration: number | null
+          game_ended_at: string | null
+          game_started_at: string | null
+          game_type: string
+          id: string
+          is_draw: boolean | null
+          player1_id: string
+          player1_score: number | null
+          player2_id: string
+          player2_score: number | null
+          pong_ball_hits_player1: number | null
+          pong_ball_hits_player2: number | null
+          pong_longest_rally: number | null
+          uno_cards_played_player1: number | null
+          uno_cards_played_player2: number | null
+          uno_game_length: number | null
+          uno_special_cards_used: number | null
+          updated_at: string | null
+          winner_id: string | null
+        }
+        Insert: {
+          chess_checkmate?: boolean | null
+          chess_pieces_captured_player1?: number | null
+          chess_pieces_captured_player2?: number | null
+          chess_stalemate?: boolean | null
+          connect4_moves?: number | null
+          connect4_winning_move?: number | null
+          couple_id: string
+          created_at?: string | null
+          game_duration?: number | null
+          game_ended_at?: string | null
+          game_started_at?: string | null
+          game_type: string
+          id?: string
+          is_draw?: boolean | null
+          player1_id: string
+          player1_score?: number | null
+          player2_id: string
+          player2_score?: number | null
+          pong_ball_hits_player1?: number | null
+          pong_ball_hits_player2?: number | null
+          pong_longest_rally?: number | null
+          uno_cards_played_player1?: number | null
+          uno_cards_played_player2?: number | null
+          uno_game_length?: number | null
+          uno_special_cards_used?: number | null
+          updated_at?: string | null
+          winner_id?: string | null
+        }
+        Update: {
+          chess_checkmate?: boolean | null
+          chess_pieces_captured_player1?: number | null
+          chess_pieces_captured_player2?: number | null
+          chess_stalemate?: boolean | null
+          connect4_moves?: number | null
+          connect4_winning_move?: number | null
+          couple_id?: string
+          created_at?: string | null
+          game_duration?: number | null
+          game_ended_at?: string | null
+          game_started_at?: string | null
+          game_type?: string
+          id?: string
+          is_draw?: boolean | null
+          player1_id?: string
+          player1_score?: number | null
+          player2_id?: string
+          player2_score?: number | null
+          pong_ball_hits_player1?: number | null
+          pong_ball_hits_player2?: number | null
+          pong_longest_rally?: number | null
+          uno_cards_played_player1?: number | null
+          uno_cards_played_player2?: number | null
+          uno_game_length?: number | null
+          uno_special_cards_used?: number | null
+          updated_at?: string | null
+          winner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_stats_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "game_stats_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couples"
             referencedColumns: ["id"]
           },
         ]
@@ -557,6 +852,13 @@ export type Database = {
             foreignKeyName: "quiz_answers_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "quiz_answers_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -690,6 +992,13 @@ export type Database = {
             foreignKeyName: "quiz_results_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "quiz_results_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -735,6 +1044,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           id: string
+          image: string | null
           theme_id: string
           title: string
         }
@@ -742,6 +1052,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
+          image?: string | null
           theme_id: string
           title: string
         }
@@ -749,6 +1060,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
+          image?: string | null
           theme_id?: string
           title?: string
         }
@@ -762,12 +1074,285 @@ export type Database = {
           },
         ]
       }
+      service_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      service_providers: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          latitude: number | null
+          longitude: number | null
+          name: string
+          opening_hours: Json | null
+          phone: string | null
+          price_range: string | null
+          subcategory_id: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          opening_hours?: Json | null
+          phone?: string | null
+          price_range?: string | null
+          subcategory_id: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          opening_hours?: Json | null
+          phone?: string | null
+          price_range?: string | null
+          subcategory_id?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_providers_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "service_subcategories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_stats: {
+        Row: {
+          accessed_at: string | null
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          service_provider_id: string
+          user_id: string | null
+        }
+        Insert: {
+          accessed_at?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          service_provider_id: string
+          user_id?: string | null
+        }
+        Update: {
+          accessed_at?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          service_provider_id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_stats_service_provider_id_fkey"
+            columns: ["service_provider_id"]
+            isOneToOne: false
+            referencedRelation: "service_providers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_stats_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_subcategories: {
+        Row: {
+          category_id: string
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_subcategories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simple_chat_notifications: {
+        Row: {
+          couple_id: string
+          created_at: string | null
+          id: string
+          message_preview: string | null
+          question_id: string | null
+          sender_id: string
+        }
+        Insert: {
+          couple_id: string
+          created_at?: string | null
+          id?: string
+          message_preview?: string | null
+          question_id?: string | null
+          sender_id: string
+        }
+        Update: {
+          couple_id?: string
+          created_at?: string | null
+          id?: string
+          message_preview?: string | null
+          question_id?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "simple_chat_notifications_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "simple_chat_notifications_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      couple_game_stats_summary: {
+        Row: {
+          chess_games: number | null
+          connect4_games: number | null
+          couple_id: string | null
+          draws: number | null
+          last_game_played: string | null
+          player1_email: string | null
+          player1_win_rate: number | null
+          player1_wins: number | null
+          player2_email: string | null
+          player2_win_rate: number | null
+          player2_wins: number | null
+          pong_games: number | null
+          total_games_played: number | null
+          uno_games: number | null
+          user1_id: string | null
+          user2_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "couples_user1_id_fkey"
+            columns: ["user1_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "couples_user2_id_fkey"
+            columns: ["user2_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_leaderboards: {
+        Row: {
+          couple_id: string | null
+          draws: number | null
+          game_type: string | null
+          games_played: number | null
+          last_played: string | null
+          player1_win_rate: number | null
+          player1_wins: number | null
+          player2_win_rate: number | null
+          player2_wins: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_stats_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couple_game_stats_summary"
+            referencedColumns: ["couple_id"]
+          },
+          {
+            foreignKeyName: "game_stats_couple_id_fkey"
+            columns: ["couple_id"]
+            isOneToOne: false
+            referencedRelation: "couples"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      cleanup_old_chat_notifications: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_old_chat_viewers: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

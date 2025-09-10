@@ -8,6 +8,10 @@ import { QuizzesManagement } from '@/components/sections/QuizzesManagement';
 import { QuizQuestionsManagement } from '@/components/sections/QuizQuestionsManagement';
 import { QuestionsManagement } from '@/components/sections/QuestionsManagement';
 import { DailyQuestionsManagement } from '@/components/sections/DailyQuestionsManagement';
+import { ServiceCategoriesManagement } from '@/components/sections/ServiceCategoriesManagement';
+import { ServiceSubcategoriesManagement } from '@/components/sections/ServiceSubcategoriesManagement';
+import { ServiceProvidersManagement } from '@/components/sections/ServiceProvidersManagement';
+import { ServiceStatsManagement } from '@/components/sections/ServiceStatsManagement';
 import { supabase } from '@/lib/supabase';
 
 export default function AdminDashboard() {
@@ -73,6 +77,14 @@ export default function AdminDashboard() {
         return <QuestionsManagement />;
       case 'daily-questions':
         return <DailyQuestionsManagement />;
+      case 'service-categories':
+        return <ServiceCategoriesManagement />;
+      case 'service-subcategories':
+        return <ServiceSubcategoriesManagement />;
+      case 'service-providers':
+        return <ServiceProvidersManagement />;
+      case 'service-stats':
+        return <ServiceStatsManagement />;
       default:
         return <Dashboard />;
     }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, MessageSquare, BarChart3, Settings, LogOut, Menu, Brain, Calendar, HelpCircle } from 'lucide-react';
+import { Users, MessageSquare, BarChart3, Settings, LogOut, Menu, Brain, Calendar, HelpCircle, Tag, FolderOpen, Building2, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { supabase } from '@/lib/supabase';
@@ -19,6 +19,10 @@ const menuItems = [
   { id: 'quiz-questions', label: 'Quiz Questions', icon: HelpCircle },
   { id: 'questions', label: 'Questions', icon: MessageSquare },
   { id: 'daily-questions', label: 'Daily Questions', icon: Calendar },
+  { id: 'service-categories', label: 'Service Categories', icon: Tag },
+  { id: 'service-subcategories', label: 'Service Subcategories', icon: FolderOpen },
+  { id: 'service-providers', label: 'Service Providers', icon: Building2 },
+  { id: 'service-stats', label: 'Service Stats', icon: TrendingUp },
 ];
 
 export function AdminLayout({ children, activeSection, onSectionChange }: AdminLayoutProps) {
