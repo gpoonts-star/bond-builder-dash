@@ -49,7 +49,7 @@ export function AdminLayout({ children, activeSection, onSectionChange }: AdminL
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       <div className="p-6 border-b">
-        <h1 className="text-xl font-bold text-primary">Admin Dashboard</h1>
+        <h1 className="text-xl font-bold text-brand-blue">ZOOJ ADMIN</h1>
         <p className="text-sm text-muted-foreground">Couples App Management</p>
       </div>
       

@@ -171,7 +171,16 @@ export function DailyQuestionsManagement() {
         .delete()
         .eq('id', dailyQuestionId);
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('violates foreign key constraint') || error.code === '23503') {
+          toast({
+            title: "Cannot Delete",
+            description: "This daily question cannot be deleted because it has related answers or notifications. Please remove related data first.",
+          });
+          return;
+        }
+        throw error;
+      }
 
       toast({
         title: "Success",

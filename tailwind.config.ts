@@ -23,6 +23,8 @@ export default {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+        "brand-blue": "hsl(var(--brand-blue))",
+        "brand-pink": "hsl(var(--brand-pink))",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
