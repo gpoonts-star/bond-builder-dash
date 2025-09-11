@@ -153,6 +153,22 @@ export function ServiceSubcategoriesManagement() {
     }
 
     try {
+      // Check for related service providers
+      const { data: providers } = await supabase
+        .from('service_providers')
+        .select('id')
+        .eq('subcategory_id', id)
+        .limit(1);
+
+      if (providers && providers.length > 0) {
+        toast({
+          title: "Cannot Delete Subcategory",
+          description: "This subcategory has service providers and cannot be deleted. Please remove all providers first.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from('service_subcategories')
         .delete()
@@ -169,7 +185,7 @@ export function ServiceSubcategoriesManagement() {
       console.error('Error deleting subcategory:', error);
       toast({
         title: "Error",
-        description: "Failed to delete subcategory",
+        description: "Failed to delete subcategory. It might be referenced by other records.",
         variant: "destructive",
       });
     }

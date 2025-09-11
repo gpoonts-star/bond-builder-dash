@@ -122,6 +122,22 @@ export function ServiceCategoriesManagement() {
     }
 
     try {
+      // Check for related subcategories
+      const { data: subcategories } = await supabase
+        .from('service_subcategories')
+        .select('id')
+        .eq('category_id', id)
+        .limit(1);
+
+      if (subcategories && subcategories.length > 0) {
+        toast({
+          title: "Cannot Delete Category",
+          description: "This category has subcategories and cannot be deleted. Please remove all subcategories first.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from('service_categories')
         .delete()
@@ -138,7 +154,7 @@ export function ServiceCategoriesManagement() {
       console.error('Error deleting category:', error);
       toast({
         title: "Error",
-        description: "Failed to delete category",
+        description: "Failed to delete category. It might be referenced by other records.",
         variant: "destructive",
       });
     }

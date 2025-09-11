@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Plus, Edit, Trash2, Building2, MapPin, Phone, Globe, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ImageUploader } from '@/components/ImageUploader';
 
 interface ServiceCategory {
   id: string;
@@ -210,6 +211,22 @@ export function ServiceProvidersManagement() {
     }
 
     try {
+      // Check for related service stats first
+      const { data: stats } = await supabase
+        .from('service_stats')
+        .select('id')
+        .eq('service_provider_id', id)
+        .limit(1);
+
+      if (stats && stats.length > 0) {
+        toast({
+          title: "Cannot Delete Service Provider",
+          description: "This service provider has usage statistics and cannot be deleted. You can edit it instead.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from('service_providers')
         .delete()
@@ -226,7 +243,7 @@ export function ServiceProvidersManagement() {
       console.error('Error deleting provider:', error);
       toast({
         title: "Error",
-        description: "Failed to delete service provider",
+        description: "Failed to delete service provider. It might be referenced by other records.",
         variant: "destructive",
       });
     }
@@ -372,15 +389,14 @@ export function ServiceProvidersManagement() {
                   />
                 </div>
                 
-                <div className="col-span-2">
-                  <Label htmlFor="image_url">Image URL</Label>
-                  <Input
-                    id="image_url"
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({...formData, image_url: e.target.value})}
-                    placeholder="https://..."
-                  />
-                </div>
+                  <div className="col-span-2">
+                    <Label htmlFor="imageUrl">Service Image</Label>
+                    <ImageUploader
+                      onImageUpload={(url) => setFormData({...formData, image_url: url})}
+                      currentImage={formData.image_url}
+                      placeholder="Upload service image"
+                    />
+                  </div>
                 
                 <div className="col-span-2">
                   <Label htmlFor="opening_hours">Opening Hours (JSON format)</Label>

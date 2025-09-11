@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import { supabase, Quiz, QuizTheme } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { ImageUploader } from '@/components/ImageUploader';
 
 interface QuizWithTheme extends Quiz {
   quiz_themes: QuizTheme;
@@ -27,6 +28,7 @@ export function QuizzesManagement() {
     title: '',
     description: '',
     theme_id: '',
+    image: '',
   });
   const { toast } = useToast();
 
@@ -84,6 +86,7 @@ export function QuizzesManagement() {
             title: formData.title,
             description: formData.description || null,
             theme_id: formData.theme_id,
+            image: formData.image || null,
           })
           .eq('id', editingQuiz.id);
 
@@ -100,6 +103,7 @@ export function QuizzesManagement() {
             title: formData.title,
             description: formData.description || null,
             theme_id: formData.theme_id,
+            image: formData.image || null,
           });
 
         if (error) throw error;
@@ -112,7 +116,7 @@ export function QuizzesManagement() {
 
       setIsDialogOpen(false);
       setEditingQuiz(null);
-      setFormData({ title: '', description: '', theme_id: '' });
+      setFormData({ title: '', description: '', theme_id: '', image: '' });
       fetchQuizzes();
     } catch (error) {
       console.error('Error saving quiz:', error);
@@ -130,6 +134,7 @@ export function QuizzesManagement() {
       title: quiz.title,
       description: quiz.description || '',
       theme_id: quiz.theme_id,
+      image: quiz.image || '',
     });
     setIsDialogOpen(true);
   };
@@ -138,6 +143,38 @@ export function QuizzesManagement() {
     if (!confirm('Are you sure you want to delete this quiz?')) return;
 
     try {
+      // Check for related quiz questions first
+      const { data: questions } = await supabase
+        .from('quiz_questions')
+        .select('id')
+        .eq('quiz_id', quizId)
+        .limit(1);
+
+      if (questions && questions.length > 0) {
+        toast({
+          title: "Cannot Delete Quiz",
+          description: "This quiz has questions and cannot be deleted. Please remove all questions first.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Check for quiz answers
+      const { data: answers } = await supabase
+        .from('quiz_answers')
+        .select('id')
+        .eq('quiz_id', quizId)
+        .limit(1);
+
+      if (answers && answers.length > 0) {
+        toast({
+          title: "Cannot Delete Quiz",
+          description: "This quiz has user responses and cannot be deleted to preserve data integrity.",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from('quizzes')
         .delete()
@@ -155,7 +192,7 @@ export function QuizzesManagement() {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to delete quiz",
+        description: "Failed to delete quiz. It might be referenced by other records.",
       });
     }
   };
@@ -181,7 +218,7 @@ export function QuizzesManagement() {
           <DialogTrigger asChild>
             <Button onClick={() => {
               setEditingQuiz(null);
-              setFormData({ title: '', description: '', theme_id: '' });
+              setFormData({ title: '', description: '', theme_id: '', image: '' });
             }}>
               <Plus className="mr-2 h-4 w-4" />
               Add Quiz
@@ -294,6 +331,14 @@ export function QuizzesManagement() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="image">Quiz Image</Label>
+                <ImageUploader
+                  onImageUpload={(url) => setFormData({ ...formData, image: url })}
+                  currentImage={formData.image}
+                  placeholder="Upload quiz image"
                 />
               </div>
             </div>
