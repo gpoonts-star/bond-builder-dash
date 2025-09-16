@@ -49,63 +49,30 @@ export function CouplesManagement() {
   };
 
   const handleDelete = async (coupleId: string) => {
-    if (!confirm('Are you sure you want to delete this couple? This will remove the relationship between the users.')) return;
+    if (!confirm('Are you sure you want to delete this couple? This will remove the relationship and ALL related data (messages, quizzes, events, etc.).')) return;
 
     try {
-      // Delete related data first
-      const tablesToClean = [
-        'daily_questions',
-        'quiz_answers',
-        'game_stats',
-        'chat_threads',
-        'calendar_events',
-        'calendar_todos',
-        'calendar_souvenirs',
-        'quiz_results',
-        'quiz_invites',
-        'simple_chat_notifications',
-        'daily_question_notifications'
-      ];
-
-      for (const table of tablesToClean) {
-        try {
-          await supabase
-            .from(table)
-            .delete()
-            .eq('couple_id', coupleId);
-        } catch (error) {
-          console.error(`Error deleting from ${table}:`, error);
-          // Continue with other tables
-        }
-      }
-
-      // Finally delete the couple
+      // With CASCADE DELETE enabled, we can directly delete the couple
+      // All related records will be automatically deleted
       const { error } = await supabase
         .from('couples')
         .delete()
         .eq('id', coupleId);
 
       if (error) {
-        if (error.message.includes('violates foreign key constraint') || error.code === '23503') {
-          toast({
-            title: "Cannot Delete Couple",
-            description: "This couple cannot be deleted because they have related data that couldn't be removed. Please contact support.",
-          });
-          return;
-        }
         throw error;
       }
 
       toast({
         title: "Success",
-        description: "Couple deleted successfully",
+        description: "Couple and all related data deleted successfully",
       });
       fetchCouples();
     } catch (error) {
       console.error('Error deleting couple:', error);
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Error", 
         description: "Failed to delete couple. Please try again.",
       });
     }

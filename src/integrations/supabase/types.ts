@@ -92,13 +92,6 @@ export type Database = {
             foreignKeyName: "calendar_events_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
-          {
-            foreignKeyName: "calendar_events_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -139,13 +132,6 @@ export type Database = {
           title?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "calendar_souvenirs_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
           {
             foreignKeyName: "calendar_souvenirs_couple_id_fkey"
             columns: ["couple_id"]
@@ -194,13 +180,6 @@ export type Database = {
             foreignKeyName: "calendar_todos_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
-          {
-            foreignKeyName: "calendar_todos_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -245,57 +224,6 @@ export type Database = {
           },
         ]
       }
-      chat_notifications: {
-        Row: {
-          created_at: string | null
-          expires_at: string | null
-          id: string
-          is_delivered: boolean | null
-          is_read: boolean | null
-          message_id: string
-          message_preview: string | null
-          question_content: string | null
-          question_id: string
-          receiver_id: string
-          sender_id: string
-          sender_name: string | null
-          thread_id: string
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          expires_at?: string | null
-          id?: string
-          is_delivered?: boolean | null
-          is_read?: boolean | null
-          message_id: string
-          message_preview?: string | null
-          question_content?: string | null
-          question_id: string
-          receiver_id: string
-          sender_id: string
-          sender_name?: string | null
-          thread_id: string
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          expires_at?: string | null
-          id?: string
-          is_delivered?: boolean | null
-          is_read?: boolean | null
-          message_id?: string
-          message_preview?: string | null
-          question_content?: string | null
-          question_id?: string
-          receiver_id?: string
-          sender_id?: string
-          sender_name?: string | null
-          thread_id?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       chat_threads: {
         Row: {
           couple_id: string | null
@@ -316,13 +244,6 @@ export type Database = {
           id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "chat_threads_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
           {
             foreignKeyName: "chat_threads_couple_id_fkey"
             columns: ["couple_id"]
@@ -450,13 +371,6 @@ export type Database = {
             foreignKeyName: "daily_question_notifications_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
-          {
-            foreignKeyName: "daily_question_notifications_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -503,13 +417,6 @@ export type Database = {
             foreignKeyName: "daily_questions_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
-          {
-            foreignKeyName: "daily_questions_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -524,90 +431,36 @@ export type Database = {
       }
       game_stats: {
         Row: {
-          chess_checkmate: boolean | null
-          chess_pieces_captured_player1: number | null
-          chess_pieces_captured_player2: number | null
-          chess_stalemate: boolean | null
-          connect4_moves: number | null
-          connect4_winning_move: number | null
-          couple_id: string
+          couple_id: string | null
           created_at: string | null
-          game_duration: number | null
-          game_ended_at: string | null
-          game_started_at: string | null
           game_type: string
           id: string
+          is_bot_game: boolean | null
           is_draw: boolean | null
-          player1_id: string
-          player1_score: number | null
-          player2_id: string
-          player2_score: number | null
-          pong_ball_hits_player1: number | null
-          pong_ball_hits_player2: number | null
-          pong_longest_rally: number | null
-          uno_cards_played_player1: number | null
-          uno_cards_played_player2: number | null
-          uno_game_length: number | null
-          uno_special_cards_used: number | null
-          updated_at: string | null
+          player1_id: string | null
+          player2_id: string | null
           winner_id: string | null
         }
         Insert: {
-          chess_checkmate?: boolean | null
-          chess_pieces_captured_player1?: number | null
-          chess_pieces_captured_player2?: number | null
-          chess_stalemate?: boolean | null
-          connect4_moves?: number | null
-          connect4_winning_move?: number | null
-          couple_id: string
+          couple_id?: string | null
           created_at?: string | null
-          game_duration?: number | null
-          game_ended_at?: string | null
-          game_started_at?: string | null
           game_type: string
           id?: string
+          is_bot_game?: boolean | null
           is_draw?: boolean | null
-          player1_id: string
-          player1_score?: number | null
-          player2_id: string
-          player2_score?: number | null
-          pong_ball_hits_player1?: number | null
-          pong_ball_hits_player2?: number | null
-          pong_longest_rally?: number | null
-          uno_cards_played_player1?: number | null
-          uno_cards_played_player2?: number | null
-          uno_game_length?: number | null
-          uno_special_cards_used?: number | null
-          updated_at?: string | null
+          player1_id?: string | null
+          player2_id?: string | null
           winner_id?: string | null
         }
         Update: {
-          chess_checkmate?: boolean | null
-          chess_pieces_captured_player1?: number | null
-          chess_pieces_captured_player2?: number | null
-          chess_stalemate?: boolean | null
-          connect4_moves?: number | null
-          connect4_winning_move?: number | null
-          couple_id?: string
+          couple_id?: string | null
           created_at?: string | null
-          game_duration?: number | null
-          game_ended_at?: string | null
-          game_started_at?: string | null
           game_type?: string
           id?: string
+          is_bot_game?: boolean | null
           is_draw?: boolean | null
-          player1_id?: string
-          player1_score?: number | null
-          player2_id?: string
-          player2_score?: number | null
-          pong_ball_hits_player1?: number | null
-          pong_ball_hits_player2?: number | null
-          pong_longest_rally?: number | null
-          uno_cards_played_player1?: number | null
-          uno_cards_played_player2?: number | null
-          uno_game_length?: number | null
-          uno_special_cards_used?: number | null
-          updated_at?: string | null
+          player1_id?: string | null
+          player2_id?: string | null
           winner_id?: string | null
         }
         Relationships: [
@@ -615,65 +468,31 @@ export type Database = {
             foreignKeyName: "game_stats_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
-          {
-            foreignKeyName: "game_stats_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "game_stats_player1_id_fkey"
+            columns: ["player1_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_stats_player2_id_fkey"
+            columns: ["player2_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_stats_winner_id_fkey"
+            columns: ["winner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
-      }
-      notification_settings: {
-        Row: {
-          couple_updates_enabled: boolean | null
-          created_at: string | null
-          daily_questions_enabled: boolean | null
-          email_enabled: boolean | null
-          events_enabled: boolean | null
-          general_notifications_enabled: boolean | null
-          id: string
-          push_enabled: boolean | null
-          quiet_hours_end: string | null
-          quiet_hours_start: string | null
-          quiz_invites_enabled: boolean | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          couple_updates_enabled?: boolean | null
-          created_at?: string | null
-          daily_questions_enabled?: boolean | null
-          email_enabled?: boolean | null
-          events_enabled?: boolean | null
-          general_notifications_enabled?: boolean | null
-          id?: string
-          push_enabled?: boolean | null
-          quiet_hours_end?: string | null
-          quiet_hours_start?: string | null
-          quiz_invites_enabled?: boolean | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          couple_updates_enabled?: boolean | null
-          created_at?: string | null
-          daily_questions_enabled?: boolean | null
-          email_enabled?: boolean | null
-          events_enabled?: boolean | null
-          general_notifications_enabled?: boolean | null
-          id?: string
-          push_enabled?: boolean | null
-          quiet_hours_end?: string | null
-          quiet_hours_start?: string | null
-          quiz_invites_enabled?: boolean | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
       }
       notifications: {
         Row: {
@@ -766,7 +585,6 @@ export type Database = {
           expires_at: string | null
           id: string
           is_read: boolean | null
-          message: string | null
           receiver_id: string
           sender_id: string
         }
@@ -776,7 +594,6 @@ export type Database = {
           expires_at?: string | null
           id?: string
           is_read?: boolean | null
-          message?: string | null
           receiver_id: string
           sender_id: string
         }
@@ -786,7 +603,6 @@ export type Database = {
           expires_at?: string | null
           id?: string
           is_read?: boolean | null
-          message?: string | null
           receiver_id?: string
           sender_id?: string
         }
@@ -848,13 +664,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "quiz_answers_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
           {
             foreignKeyName: "quiz_answers_couple_id_fkey"
             columns: ["couple_id"]
@@ -988,13 +797,6 @@ export type Database = {
           weaknesses?: Json
         }
         Relationships: [
-          {
-            foreignKeyName: "quiz_results_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
           {
             foreignKeyName: "quiz_results_couple_id_fkey"
             columns: ["couple_id"]
@@ -1264,13 +1066,6 @@ export type Database = {
             foreignKeyName: "simple_chat_notifications_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
-          {
-            foreignKeyName: "simple_chat_notifications_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
             referencedRelation: "couples"
             referencedColumns: ["id"]
           },
@@ -1285,60 +1080,36 @@ export type Database = {
           couple_id: string | null
           draws: number | null
           last_game_played: string | null
-          player1_email: string | null
+          player1_id: string | null
           player1_win_rate: number | null
           player1_wins: number | null
-          player2_email: string | null
+          player2_id: string | null
           player2_win_rate: number | null
           player2_wins: number | null
           pong_games: number | null
           total_games_played: number | null
           uno_games: number | null
-          user1_id: string | null
-          user2_id: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "couples_user1_id_fkey"
-            columns: ["user1_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "couples_user2_id_fkey"
-            columns: ["user2_id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      game_leaderboards: {
-        Row: {
-          couple_id: string | null
-          draws: number | null
-          game_type: string | null
-          games_played: number | null
-          last_played: string | null
-          player1_win_rate: number | null
-          player1_wins: number | null
-          player2_win_rate: number | null
-          player2_wins: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "game_stats_couple_id_fkey"
-            columns: ["couple_id"]
-            isOneToOne: false
-            referencedRelation: "couple_game_stats_summary"
-            referencedColumns: ["couple_id"]
-          },
           {
             foreignKeyName: "game_stats_couple_id_fkey"
             columns: ["couple_id"]
             isOneToOne: false
             referencedRelation: "couples"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_stats_player1_id_fkey"
+            columns: ["player1_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_stats_player2_id_fkey"
+            columns: ["player2_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]

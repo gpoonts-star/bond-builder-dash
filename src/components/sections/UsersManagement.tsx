@@ -123,44 +123,26 @@ export function UsersManagement() {
 
       if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
 
-      // Delete from other related tables that might reference this user
-      const tablesToClean = [
-        'game_stats',
-        'quiz_answers', 
-        'pulses',
-        'answers',
-        'chat_messages',
-        'service_stats',
-        'notifications'
-      ];
-
-      for (const table of tablesToClean) {
-        try {
-          await supabase
-            .from(table)
-            .delete()
-            .eq('user_id', userId);
-        } catch (error) {
-          console.error(`Error deleting from ${table}:`, error);
-          // Continue with other tables
-        }
-      }
-
-      // Clean up additional user references
+      // With CASCADE DELETE enabled, deleting the profile will automatically
+      // clean up most related records, but we still need to clean some manual references
       try {
         // Clean sender/receiver references in pulses
         await supabase.from('pulses').delete().or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
         
-        // Clean player references in game_stats
+        // Clean player references in game_stats  
         await supabase.from('game_stats').delete().or(`player1_id.eq.${userId},player2_id.eq.${userId}`);
         
         // Clean chat messages by sender
         await supabase.from('chat_messages').delete().eq('sender_id', userId);
         
-        // Clean chat viewers
+        // Clean other user-specific data
+        await supabase.from('quiz_answers').delete().eq('user_id', userId);
+        await supabase.from('answers').delete().eq('user_id', userId);
+        await supabase.from('service_stats').delete().eq('user_id', userId);
+        await supabase.from('notifications').delete().eq('user_id', userId);
         await supabase.from('chat_viewers').delete().eq('user_id', userId);
       } catch (error) {
-        console.error('Error cleaning additional references:', error);
+        console.error('Error cleaning user references:', error);
       }
 
       // Finally, delete the user profile
@@ -170,13 +152,6 @@ export function UsersManagement() {
         .eq('id', userId);
 
       if (error) {
-        if (error.message.includes('violates foreign key constraint') || error.code === '23503') {
-          toast({
-            title: "Cannot Delete User",
-            description: "This user cannot be deleted because they have related data that couldn't be removed. Please contact support.",
-          });
-          return;
-        }
         throw error;
       }
 
