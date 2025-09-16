@@ -3,6 +3,7 @@ import { AdminAuth } from '@/components/AdminAuth';
 import { AdminLayout } from '@/components/AdminLayout';
 import { Dashboard } from '@/components/sections/Dashboard';
 import { UsersManagement } from '@/components/sections/UsersManagement';
+import { CouplesManagement } from '@/components/sections/CouplesManagement';
 import { QuizThemesManagement } from '@/components/sections/QuizThemesManagement';
 import { QuizzesManagement } from '@/components/sections/QuizzesManagement';
 import { QuizQuestionsManagement } from '@/components/sections/QuizQuestionsManagement';
@@ -67,6 +68,8 @@ export default function AdminDashboard() {
         return <Dashboard />;
       case 'users':
         return <UsersManagement />;
+      case 'couples':
+        return <CouplesManagement />;
       case 'quiz-themes':
         return <QuizThemesManagement />;
       case 'quizzes':

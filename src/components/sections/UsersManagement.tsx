@@ -96,19 +96,32 @@ export function UsersManagement() {
   };
 
   const handleDelete = async (userId: string) => {
-    if (!confirm('Are you sure you want to delete this user? This will also remove them from any couples and delete all related data.')) return;
-
     try {
-      // First, delete from couples table where this user is involved
-      const { error: couplesError } = await supabase
+      // First check if user has couple relationships
+      const { data: couples, error: couplesCheckError } = await supabase
         .from('couples')
-        .delete()
+        .select('id')
         .or(`user1_id.eq.${userId},user2_id.eq.${userId}`);
 
-      if (couplesError) {
-        console.error('Error deleting from couples:', couplesError);
-        // Continue anyway, as the couple relationship might not exist
+      if (couplesCheckError) {
+        console.error('Error checking couples:', couplesCheckError);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to check user relationships",
+        });
+        return;
       }
+
+      if (couples && couples.length > 0) {
+        toast({
+          title: "Cannot Delete User",
+          description: "This user has couple relationships. Please delete the couple relationship first in the Couples Management section, then delete the user.",
+        });
+        return;
+      }
+
+      if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
 
       // Delete from other related tables that might reference this user
       const tablesToClean = [
@@ -169,7 +182,7 @@ export function UsersManagement() {
 
       toast({
         title: "Success",
-        description: "User and all related data deleted successfully",
+        description: "User deleted successfully",
       });
       fetchUsers();
     } catch (error) {

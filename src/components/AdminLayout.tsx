@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Users, MessageSquare, BarChart3, Settings, LogOut, Menu, Brain, Calendar, HelpCircle, Tag, FolderOpen, Building2, TrendingUp } from 'lucide-react';
+import { Users, MessageSquare, BarChart3, Settings, LogOut, Menu, Brain, Calendar, HelpCircle, Tag, FolderOpen, Building2, TrendingUp, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { supabase } from '@/lib/supabase';
@@ -14,6 +14,7 @@ interface AdminLayoutProps {
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
   { id: 'users', label: 'Users', icon: Users },
+  { id: 'couples', label: 'Couples', icon: Heart },
   { id: 'quiz-themes', label: 'Quiz Themes', icon: Brain },
   { id: 'quizzes', label: 'Quizzes', icon: MessageSquare },
   { id: 'quiz-questions', label: 'Quiz Questions', icon: HelpCircle },
