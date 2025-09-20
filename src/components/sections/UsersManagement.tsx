@@ -34,7 +34,7 @@ export function UsersManagement() {
 
   const fetchUsers = async () => {
     try {
-      // First get profiles
+      // Get profiles only (admin.listUsers requires service_role key)
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('*')
@@ -42,19 +42,11 @@ export function UsersManagement() {
 
       if (profilesError) throw profilesError;
 
-      // Then get auth users data
-      const { data: authData, error: authError } = await supabase.auth.admin.listUsers();
-
-      if (authError) throw authError;
-
-      // Combine the data
-      const usersWithAuth = profiles?.map(profile => {
-        const authUser = authData?.users?.find((user: any) => user.id === profile.id);
-        return {
-          ...profile,
-          email: authUser?.email || 'N/A'
-        };
-      }) || [];
+      // Map profiles with placeholder for email (requires admin access)
+      const usersWithAuth = profiles?.map(profile => ({
+        ...profile,
+        email: 'Admin access required'
+      })) || [];
 
       setUsers(usersWithAuth);
     } catch (error) {
