@@ -34,21 +34,12 @@ export function UsersManagement() {
 
   const fetchUsers = async () => {
     try {
-      // Get profiles only (admin.listUsers requires service_role key)
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+      // Use edge function to get users with emails
+      const { data, error } = await supabase.functions.invoke('get-users-with-emails');
 
-      if (profilesError) throw profilesError;
+      if (error) throw error;
 
-      // Map profiles with placeholder for email (requires admin access)
-      const usersWithAuth = profiles?.map(profile => ({
-        ...profile,
-        email: 'Admin access required'
-      })) || [];
-
-      setUsers(usersWithAuth);
+      setUsers(data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast({
