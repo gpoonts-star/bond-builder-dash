@@ -11,12 +11,16 @@ import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import { supabase, Profile } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
+interface UserWithAuth extends Profile {
+  email?: string;
+}
+
 export function UsersManagement() {
-  const [users, setUsers] = useState<Profile[]>([]);
+  const [users, setUsers] = useState<UserWithAuth[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<Profile | null>(null);
+  const [editingUser, setEditingUser] = useState<UserWithAuth | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     gender: '',
@@ -30,13 +34,29 @@ export function UsersManagement() {
 
   const fetchUsers = async () => {
     try {
-      const { data, error } = await supabase
+      // First get profiles
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setUsers(data || []);
+      if (profilesError) throw profilesError;
+
+      // Then get auth users data
+      const { data: authData, error: authError } = await supabase.auth.admin.listUsers();
+
+      if (authError) throw authError;
+
+      // Combine the data
+      const usersWithAuth = profiles?.map(profile => {
+        const authUser = authData?.users?.find((user: any) => user.id === profile.id);
+        return {
+          ...profile,
+          email: authUser?.email || 'N/A'
+        };
+      }) || [];
+
+      setUsers(usersWithAuth);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast({
@@ -85,7 +105,7 @@ export function UsersManagement() {
     }
   };
 
-  const handleEdit = (user: Profile) => {
+  const handleEdit = (user: UserWithAuth) => {
     setEditingUser(user);
     setFormData({
       name: user.name,
@@ -123,7 +143,8 @@ export function UsersManagement() {
 
   const filteredUsers = users.filter(user =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (user.country?.toLowerCase().includes(searchTerm.toLowerCase()))
+    (user.country?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (user.email?.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (loading) {
@@ -142,7 +163,7 @@ export function UsersManagement() {
       <Card>
         <CardHeader>
           <CardTitle>Users ({users.length})</CardTitle>
-          <CardDescription>All registered users in your app</CardDescription>
+          <CardDescription>All registered users in your app (passwords are securely hashed and cannot be displayed)</CardDescription>
           <div className="flex items-center space-x-2">
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -160,6 +181,7 @@ export function UsersManagement() {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
                 <TableHead>Gender</TableHead>
                 <TableHead>Country</TableHead>
                 <TableHead>Invite Code</TableHead>
@@ -172,6 +194,7 @@ export function UsersManagement() {
               {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">{user.name}</TableCell>
+                  <TableCell className="text-sm">{user.email}</TableCell>
                   <TableCell>
                     {user.gender ? (
                       <Badge variant="outline">
