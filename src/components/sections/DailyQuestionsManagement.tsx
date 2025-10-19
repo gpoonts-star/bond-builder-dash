@@ -18,7 +18,7 @@ interface DailyQuestionWithDetails extends DailyQuestion {
     user2: Profile | null;
   }) | null;
 }
-
+ 
 export function DailyQuestionsManagement() {
   const [dailyQuestions, setDailyQuestions] = useState<DailyQuestionWithDetails[]>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
