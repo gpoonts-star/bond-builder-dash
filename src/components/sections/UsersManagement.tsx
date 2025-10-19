@@ -13,6 +13,15 @@ import { useToast } from '@/hooks/use-toast';
 
 interface UserWithAuth extends Profile {
   email?: string;
+  couple_id?: string | null;
+  partner_id?: string | null;
+  couple_status?: string | null;
+}
+
+interface CoupleGroup {
+  coupleId: string;
+  users: UserWithAuth[];
+  status: string;
 }
 
 export function UsersManagement() {
@@ -124,7 +133,46 @@ export function UsersManagement() {
     }
   };
 
-  const filteredUsers = users.filter(user =>
+  // Group users by couples
+  const groupedData = () => {
+    const coupleGroups: CoupleGroup[] = [];
+    const singleUsers: UserWithAuth[] = [];
+    const processedUserIds = new Set<string>();
+
+    users.forEach(user => {
+      if (processedUserIds.has(user.id)) return;
+
+      if (user.couple_id && user.partner_id) {
+        const partner = users.find(u => u.id === user.partner_id);
+        if (partner) {
+          coupleGroups.push({
+            coupleId: user.couple_id,
+            users: [user, partner],
+            status: user.couple_status || 'unknown'
+          });
+          processedUserIds.add(user.id);
+          processedUserIds.add(partner.id);
+        }
+      } else {
+        singleUsers.push(user);
+        processedUserIds.add(user.id);
+      }
+    });
+
+    return { coupleGroups, singleUsers };
+  };
+
+  const { coupleGroups, singleUsers } = groupedData();
+
+  const filteredCouples = coupleGroups.filter(couple =>
+    couple.users.some(user =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.country?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.email?.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+  );
+
+  const filteredSingles = singleUsers.filter(user =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (user.country?.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (user.email?.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -159,62 +207,132 @@ export function UsersManagement() {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Gender</TableHead>
-                <TableHead>Country</TableHead>
-                <TableHead>Invite Code</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsers.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell className="text-sm">{user.email}</TableCell>
-                  <TableCell>
-                    {user.gender ? (
-                      <Badge variant="outline">
-                        {user.gender}
-                      </Badge>
-                    ) : (
-                      <span className="text-muted-foreground">-</span>
-                    )}
-                  </TableCell>
-                  <TableCell>{user.country || '-'}</TableCell>
-                  <TableCell>
-                    <code className="text-xs bg-muted px-2 py-1 rounded">
-                      {user.invite_code || '-'}
-                    </code>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={user.completed ? "default" : "secondary"}>
-                      {user.completed ? 'Complete' : 'Incomplete'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(user.created_at).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={() => handleDelete(user.id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
+        <CardContent className="space-y-6">
+          {filteredCouples.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Couples ({filteredCouples.length})</h3>
+              {filteredCouples.map((couple) => (
+                <div key={couple.coupleId} className="border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge variant="outline">{couple.status}</Badge>
+                    <span className="text-xs text-muted-foreground">Couple ID: {couple.coupleId.slice(0, 8)}...</span>
+                  </div>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Gender</TableHead>
+                        <TableHead>Country</TableHead>
+                        <TableHead>Invite Code</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Created</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {couple.users.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell className="font-medium">{user.name}</TableCell>
+                          <TableCell className="text-sm">{user.email}</TableCell>
+                          <TableCell>
+                            {user.gender ? (
+                              <Badge variant="outline">{user.gender}</Badge>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </TableCell>
+                          <TableCell>{user.country || '-'}</TableCell>
+                          <TableCell>
+                            <code className="text-xs bg-muted px-2 py-1 rounded">
+                              {user.invite_code || '-'}
+                            </code>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={user.completed ? "default" : "secondary"}>
+                              {user.completed ? 'Complete' : 'Incomplete'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {new Date(user.created_at).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button variant="outline" size="sm" onClick={() => handleDelete(user.id)}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          )}
+
+          {filteredSingles.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Single Users ({filteredSingles.length})</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Gender</TableHead>
+                    <TableHead>Country</TableHead>
+                    <TableHead>Invite Code</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredSingles.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell className="font-medium">{user.name}</TableCell>
+                      <TableCell className="text-sm">{user.email}</TableCell>
+                      <TableCell>
+                        {user.gender ? (
+                          <Badge variant="outline">{user.gender}</Badge>
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
+                      <TableCell>{user.country || '-'}</TableCell>
+                      <TableCell>
+                        <code className="text-xs bg-muted px-2 py-1 rounded">
+                          {user.invite_code || '-'}
+                        </code>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={user.completed ? "default" : "secondary"}>
+                          {user.completed ? 'Complete' : 'Incomplete'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {new Date(user.created_at).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Button variant="outline" size="sm" onClick={() => handleEdit(user)}>
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => handleDelete(user.id)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
 

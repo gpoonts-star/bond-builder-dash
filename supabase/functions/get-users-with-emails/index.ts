@@ -24,6 +24,13 @@ Deno.serve(async (req) => {
 
     if (profilesError) throw profilesError
 
+    // Get couples data
+    const { data: couples, error: couplesError } = await supabaseClient
+      .from('couples')
+      .select('*')
+
+    if (couplesError) throw couplesError
+
     // Get auth users data
     const { data: authData, error: authError } = await supabaseClient.auth.admin.listUsers()
 
@@ -32,9 +39,16 @@ Deno.serve(async (req) => {
     // Combine the data
     const usersWithAuth = profiles?.map(profile => {
       const authUser = authData?.users?.find((user: any) => user.id === profile.id)
+      const couple = couples?.find((c: any) => 
+        c.user1_id === profile.id || c.user2_id === profile.id
+      )
+      
       return {
         ...profile,
-        email: authUser?.email || 'N/A'
+        email: authUser?.email || 'N/A',
+        couple_id: couple?.id || null,
+        partner_id: couple?.user1_id === profile.id ? couple?.user2_id : couple?.user1_id || null,
+        couple_status: couple?.status || null
       }
     }) || []
 
